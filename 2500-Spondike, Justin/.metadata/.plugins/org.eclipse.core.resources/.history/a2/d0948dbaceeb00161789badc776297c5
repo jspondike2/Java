@@ -9,9 +9,9 @@ public class TextFileReader
 {
 
 	
-	final private static String docLocation = "WarwithShakespeare.txt";
-	final private static boolean LinkedLists = false;	//this enables the linked lists, originally made for this program
-	final private static boolean HashLists = false;		//this enables the second portion of the programming assignment (Hash Tables)
+	final private static String docLocation = "Frankenstien.txt";
+	final private static boolean LinkedLists = true;	//this enables the linked lists, originally made for this program
+	final private static boolean HashLists = true;		//this enables the second portion of the programming assignment (Hash Tables)
 	final private static boolean BinaryTree = true;		//enables the third portion of the text file reader assignm,ent (Binary Search Tree)
 	
 	/* This program will read a text file and parse every word and place it in a list.
