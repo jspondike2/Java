@@ -1,0 +1,54 @@
+
+public class HashList2 extends HashTableListDefault
+/* A version of the Hash Table list with a specific Hash function.
+ * the Find and Add methods depend on what the Hash function is so
+ * placing them uniquely here seemed the best route.
+ */
+{
+	WordNode location;
+	HashList2()
+	{
+		//default constructor
+	}
+	HashList2(int x)
+	{	//allows for variable array length
+		list = new WordNode[x];
+	}
+	public boolean contains(String word)
+	{
+		/* Uses the Hash function unique to this Hash Table
+		 * to find the location where the input is to be
+		 * placed. If it already exists there it will return
+		 * true, otherwise it will return false.
+		 */
+		int asciiVal = word.charAt(0);								//grabs the ascii value of the first character in the word
+		
+		hashLocation = asciiVal % 256;								//just as a fail safe to ensure (without checking the ascii table) that the hashLocation will always be within the 256 parameter
+		
+		/* Because each reference in the array is going to be a linked list,
+		 * we can recycle the contains method that was utilized before, 
+		 * changing only where it says "list" to "list[hashLocation]"
+		 */
+		location = list[hashLocation];
+		if(location==null)return false;								//if the list is empty then the word cannot be in the list
+		while(location!=null)										//so long as the location is not pointing to nothing
+		{
+			if(location.getValue().equals(word)) 					//if the value in the current node is the same as the word then return true
+			{
+				wordChecks++;										//increments the number of word checks after it checks to see if its equal	
+				return true;		
+			}
+			wordChecks++;
+			location=(WordNode)location.getLink();					//otherwise change the reference of location to the next node and continue
+		}
+		return false;		
+	}
+/*	public void incrementWord()
+	{
+	   /* This method will call the node's increment
+		* method and fundamentally increase the count
+	 	* of the word in location
+	 	*/
+//		location.incrememntCount();
+	//}
+}

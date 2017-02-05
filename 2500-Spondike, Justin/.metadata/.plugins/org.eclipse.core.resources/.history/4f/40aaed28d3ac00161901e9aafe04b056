@@ -1,0 +1,54 @@
+
+public class HashList1 extends HashTableListDefault
+/* A version of the Hash Table list with a specific Hash function.
+ * the Find and Add methods depend on what the Hash function is so
+ * placing them uniquely here seemed the best route.
+ */
+{
+	WordNode location;
+	HashList1()
+	{
+		//default constructor
+	}
+	HashList1(int x)
+	{	//allows for variable array length
+		list = new WordNode[x];
+	}
+	public boolean contains(String word)
+	{
+		/* Uses the Hash function unique to this Hash Table
+		 * to find the location where the input is to be
+		 * placed. If it already exists there it will return
+		 * true, otherwise it will return false.
+		 */
+		int asciiVal = 0;											//running sum to hold the value of the given word
+		
+		for(int i = word.length()-1; i>=0; i--)						//for loop iterates through all the characters in the given word
+		{
+			asciiVal += word.charAt(i);								//adds each ascii value to the running sum
+		}
+		
+		hashLocation = asciiVal % 256;								//sets the value of the word mod 256 as the hash location
+		
+		/* Because each reference in the array is going to be a linked list,
+		 * we can recycle the contains method that was utilized before, 
+		 * changing only where it says "list" to "list[hashLocation]"
+		 */
+		location = list[hashLocation];
+		if(location==null)return false;								//if the list is empty then the word cannot be in the list
+		while(location!=null)										//so long as the location is not pointing to nothing
+		{
+			if(location.getValue().equals(word)) return true;		//if the value in the current node is the same as the word then return true
+			location=(WordNode)location.getLink();					//otherwise change the reference of location to the next node and continue
+		}
+		return false;												//if it wasn't found return false
+	}
+	public void incrementWord()
+	{
+	   /* This method will call the node's increment
+		* method and fundamentally increase the count
+	 	* of the word in location
+	 	*/
+		location.incrememntCount();
+	}
+}

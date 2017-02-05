@@ -1,0 +1,18 @@
+
+public class IncrementativeLL extends ListDefaults
+{
+/* This list will grab each new word that the program parses from the text file
+ * and throws it into an unsorted linked list. If ever there is a word that is
+ * already present on the list it will increment the counter of that word, 
+ * AND increment that words' placement in the list. This creates a dynamic list
+ * where the most prominent words are going to be closer to the front of the list.
+ */
+	public IncrementativeLL()
+	{
+		// This default constructor creates an IncrementativeLL object.	
+	}
+	public void incrementWord(String word)
+	{
+		//TODO
+	}
+}

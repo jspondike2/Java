@@ -1,0 +1,43 @@
+
+public class SortedLL extends ListDefaults
+{
+/* This list will grab each new word that the program parses from the text file
+ * and throws it into a sorted linked list. When there is a word that is not
+ * present in the list it will find the proper placement of the word (alphabetically)
+ * If ever there is a word that is already present on the list it will increment the
+ * counter of that word, not compromising the order of the list.
+ */
+	public SortedLL()
+	{
+		
+	}
+	public void add(String text)
+	{
+		WordNode node = new WordNode(text, location);
+		if(previous!=null)previous.setLink(node);
+		else list=node;
+		
+		
+		
+		/* It is currently set to place a word AFTER the word it is supposed to appear behind... 
+		 * it doesn't handle being placed BEFORE the word it is supposed to
+		 * 
+		 * i think
+		 */
+	}
+	public boolean contains(String word)
+	{
+		if(list==null)return false;					//if the list is empty then the word cannot be in the list
+		location=list;								//sets the location to the front of the list
+		while(location!=null&&(word.compareTo(""+location.getValue())<1))						//so long as the location is not pointing to nothing and we haven't passed where the word is supposed to be
+		{
+			checks+=2;								//increments the number of checks the program has made (2, because it makes a check in the while loop)
+			if(location.getValue().equals(word)) return true;//if the value in the current node is the same as the word then return true
+			previous=location;
+			location=(WordNode)location.getLink();	//otherwise change the reference of location to the next node and continue
+		}
+		checks++;									//the final check in the while loop isnt accounted for if the loop doesn't run... so this is the final increment of check
+		return false;								//if it wasn't found return false
+	}
+
+}

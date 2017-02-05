@@ -1,0 +1,57 @@
+
+public class SortedLL extends ListDefaults
+{
+/* This list will grab each new word that the program parses from the text file
+ * and throws it into a sorted linked list. When there is a word that is not
+ * present in the list it will find the proper placement of the word (alphabetically)
+ * If ever there is a word that is already present on the list it will increment the
+ * counter of that word, not compromising the order of the list.
+ */
+	public SortedLL()
+	{
+		
+	}
+	public void add(String text)
+	{
+		WordNode node = new WordNode();
+		node.setValue(text);
+		if(previous==null)
+			{
+				node.setLink(list);
+				list=node;
+			}
+		else 
+			{
+				node.setLink(location);
+				previous.setLink(node);
+			}
+		
+		
+		
+		/* It is currently set to place a word AFTER the word it is supposed to appear behind... 
+		 * it doesn't handle being placed BEFORE the word it is supposed to
+		 * 
+		 * i think
+		 */
+	}
+	public boolean contains(String word)
+	{
+		if(list==null)return false;					//if the list is empty then the word cannot be in the list
+		location=list;								//sets the location to the front of the list
+		while(location!=null)						//so long as the location is not pointing to nothing and we haven't passed where the word is supposed to be
+		{
+			if((""+location.getValue()).compareTo(word)<0)	//if the word comes after the current value in the list it will output a negative integer and this if will increment the position of the location pointer
+			{
+				checks++;
+				previous=location;
+		//		System.out.println(location);
+				location=(WordNode)location.getLink();
+			//	System.out.println(location);
+			}
+			else if(location.getValue().equals(word)){checks++; return true;}//if the value in the current node is the same as the word then return true
+			else break;										//if we've passed the location where the word should be located ( where .compareTo() returns a positive integer) it will break
+		}
+		return false;								//if it wasn't found return false
+	}
+
+}

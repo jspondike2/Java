@@ -1,0 +1,73 @@
+import java.util.Scanner;
+
+public class Converter
+{
+	static String postfix="";
+	static Stack stack = new Stack();
+	
+	public static String formatInfix(String infix)
+	{
+		return infix;
+	}
+	public static String convertInfixToPostfix(String infix) throws StackUnderflow
+	 {
+		 postfix="";									//creates a string to hold the postfix expression
+		 stack = new Stack();							//creates a new stack for the program to use for converting
+		 String propInfix = formatInfix(infix);				//uses the format method to stick the infix in proper notation for the convert method to run
+		 Scanner scan = new Scanner(propInfix);				//creates a scanner to traverse the infix expression input by the user
+		 String token;										//holds the current characters being considered by the converter
+		 
+		 while(scan.hasNext())								//while there are still characters left in the string
+		 {
+			 token = scan.next();
+
+			if	 (token=="+"||token=="-"	//if the next token is an operand it will run the Operator method
+				||token=="x"||token=="/"
+				||token=="%"||token=="^"
+				||token=="<"||token==">")
+			{
+				processOperator(token);
+			}
+			else if(token.equals("(")||token=="["||token=="{") stack.push(token);							//if the token is a left parenthesis then it will push it onto the stack
+			else if(token==")"||token=="]"||token=="}") rightParan();	//if the token is a right parenthesis then it will run the appropriate method
+
+			//if none of the if statements above runs then the token is an integer and it is appended to the postfix expression
+			else{
+					postfix += token + " ";			//casts the integer to a string and appends it to the postfix expression
+		 		}
+		 }
+		 
+		 /*
+		  * once everything has been pushed onto the stack
+		  * top and pop it off so that it can be placed in the postfix representation
+		  */
+		 scan.close(); 
+		 return postfix;
+	 }
+
+	private static void rightParan() throws StackUnderflow
+	{
+		Object topToken = stack.top();
+		while(!(topToken=="("||topToken=="["||topToken=="{"))
+		{
+			postfix += topToken + " ";
+			stack.pop();
+			topToken = ""+stack.top();
+		}
+		stack.pop();
+	}
+	
+	private static void processOperator(String token) throws StackUnderflow
+	{
+		Object topToken = stack.top();
+		while(!stack.isEmpty() && 
+				!(stack.top()=="("||stack.top()=="["||stack.top()=="{"))
+		{
+			stack.pop();
+			postfix += topToken + " ";
+			topToken = "" + stack.top();
+		}
+		stack.push(token);
+	}
+
+}

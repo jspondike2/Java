@@ -1,0 +1,105 @@
+
+public class ListDefaults
+{
+/* Being as how every single List we are required to make uses the same
+ * method of contains, NumOfWords, and distinctWords I decided to stick all
+ * of the list defaults in this class and use the individualized classes to
+ * handle the differentiating methods. (SortedLL's add method, and the 
+ * DynamicLL and IncrementativeLL incrementWord methods)
+ */
+	
+	WordNode list;									//creates the list
+	WordNode location;								//creates a floating point to traverse the list
+	WordNode previous;								//holds a reference to the previous node
+	int checks=0;									//holds a value equal to the number of checks made by the program
+	int refChanCount=0;								//holds a number for how many times a reference is changed between nodes or location pointers
+	public void add(String text)
+	{
+		/* The only list that does not simply add to the beginning
+		 * of the list is the Sorted Linked List, and that class
+		 * will override this method.
+		 */
+		WordNode node = new WordNode(text, list);	//creates a new node which holds the word (String text) and a link to the front of the list (WordNode list)
+		list=node;									//sets the front of the list to the new node
+	}
+
+	public boolean contains(String word)
+	{
+		/* Returns a boolean value, dependent upon whether or not
+		 * the current list contains the word in question.
+		 * SortedLL has a special case because it is sorted,
+		 * it does not always need to traverse the entire list when
+		 * a word is not present.
+		 */
+		if(list==null)return false;					//if the list is empty then the word cannot be in the list
+		location=list;								//sets the location to the front of the list
+		previous=null;
+		while(location!=null)						//so long as the location is not pointing to nothing
+		{
+			checks++;								//increments the number of checks the program has made
+			if(location.getValue().equals(word)) return true;//if the value in the current node is the same as the word then return true
+			previous=location;
+			location=(WordNode)location.getLink();	//otherwise change the reference of location to the next node and continue
+		}
+		return false;								//if it wasn't found return false
+	}
+	public void incrementWord(String word)			//method increments the count of the word in 'location'
+	{
+		location.incrememntCount();					//increment the count of the word in the current location	
+	}
+	public int numOfWords()
+	{
+		/* Returns an integer
+		 * Traverses the list, counting how many words are in the list
+		 * by adding up the counts of all of the nodes in the list.
+		 */
+		int num=0;									//create a running sum of the number of words
+		location=list;								//set the beginning location to the front of the list
+		while(location!=null)						//so long as location isn't pointing at null
+		{
+			num+=location.getCount();				//get the count of the current word and add it to the running sum (num)
+			location=(WordNode)location.getLink();	//move on to the next node
+		}
+		return num;									//return the number of words in the passage
+	}
+	public int distinctWords()
+	{
+		/* Traverses the list, counting how many unique WordNode
+		 * objects are present, thus representing the number of
+		 * unique words in the list.
+		 */
+		int num=0;									//a running sum of how many distinct words there are in the list
+		location=list;								//set the beginning location to the front of the list
+		while(location!=null)						//so long as location isn't pointing at null
+		{
+			num++;									//add one to the number of distinct words
+			location=(WordNode)location.getLink();	//move on to the next node
+		}
+		return num;									//return the number of distinct words in the passage
+	}
+	public void print()
+	{
+		/* A method used to print out the first 100 words in the
+		 * list. It traverses the list and prints the current word
+		 * accompanied by its count.
+		 */
+		location=list;								//sets the location pointer to the front of the list
+		System.out.println("The first 100 words"	
+				+ " in the list are:");				//prints out a forward, explaining what the following data means
+		for(int x=0; x<100;x++)						//iterates through the first 100 words
+		{
+			if(location==null)break;				//if the location is ever null, if it has completely gone through the list, it will break from the for loop
+			System.out.println(location.getValue()+
+					"  x"+location.getCount());		//this will print the current word and format the count to placed right beside it
+			location=(WordNode) location.getLink();	//this will increment the location pointer to point at the next node
+		}
+	}
+	public int getChecks()
+	{
+		return checks;
+	}
+	public int refChanges()
+	{
+		return refChanCount;
+	}
+}

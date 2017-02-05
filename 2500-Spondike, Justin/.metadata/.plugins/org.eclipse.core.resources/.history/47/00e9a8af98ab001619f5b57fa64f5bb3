@@ -1,0 +1,17 @@
+
+public class HashList2 extends HashTableListDefault
+/* A version of the Hash Table list with a specific Hash function.
+ * the Find and Add methods depend on what the Hash function is so
+ * placing them uniquely here seemed the best route.
+ */
+{
+	HashList2()
+	{
+		
+	}
+	HashList2(int x)
+	{
+		
+	}
+	
+}

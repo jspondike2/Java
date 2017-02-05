@@ -1,0 +1,74 @@
+
+public class ListDefaults
+{
+/* Being as how every single List we are required to make uses the same
+ * method of contains, incrementWord, NumOfWords, and distinctWords I
+ * decided to stick all of the list defaults in this class and use the 
+ * individualized classes to handle the differentiating add methods
+ */
+	
+	WordNode list;									//creates the list
+	WordNode location;								//creates a floating point to traverse the list
+	WordNode previous;								//holds a reference to the previous node
+	int checks=0;									//holds a value equal to the number of checks made by the program
+	public void add(String text)
+	{
+		/* The only list that does not simply add to the beginning
+		 * of the list is the Sorted Linked List, and that class
+		 * will override this method.
+		 */
+		WordNode node = new WordNode(text, list);	//creates a new node which holds the word (String text) and a link to the front of the list (WordNode list)
+		list=node;									//sets the front of the list to the new node
+	}
+
+	public boolean contains(String word)
+	{
+		if(list==null)return false;					//if the list is empty then the word cannot be in the list
+		location=list;								//sets the location to the front of the list
+		while(location!=null)						//so long as the location is not pointing to nothing
+		{
+			checks++;								//increments the number of checks the program has made
+			if(location.getValue().equals(word)) return true;//if the value in the current node is the same as the word then return true
+			previous=location;
+			location=(WordNode)location.getLink();	//otherwise change the reference of location to the next node and continue
+		}
+		return false;								//if it wasn't found return false
+	}
+	public void incrementWord(String word)
+	{
+		location.incrememntCount();					//increment the count of the word in the current location	
+	}
+	public int numOfWords()
+	{
+		int num=0;									//create a running sum of the number of words
+		location=list;								//set the beginning location to the front of the list
+		while(location!=null)						//so long as location isn't pointing at null
+		{
+			num+=location.getCount();				//get the count of the current word and add it to the running sum (num)
+			location=(WordNode)location.getLink();	//move on to the next node
+		}
+		return num;									//return the number of words in the passage
+	}
+	public int distinctWords()
+	{
+		int num=0;									//a running sum of how many distinct words there are in the list
+		location=list;								//set the beginning location to the front of the list
+		while(location!=null)						//so long as location isn't pointing at null
+		{
+			num++;									//add one to the number of distinct words
+			location=(WordNode)location.getLink();	//move on to the next node
+		}
+		return num;									//return the number of distinct words in the passage
+	}
+	public void print()
+	{
+		location=list;
+		System.out.println("The first 100 words in the list are:");
+		for(int x=0; x<100;x++)
+		{
+			if(location==null)break;
+			System.out.println(location.getValue()+"  x"+location.getCount());
+			location=(WordNode) location.getLink();
+		}
+	}
+}

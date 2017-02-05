@@ -1,0 +1,179 @@
+/* Justin Spondike
+ * Date: 10/23/2016
+ * EECS 2500 Linear Data Structures
+ */
+import java.util.Scanner;
+import java.io.File;
+import java.io.FileNotFoundException;
+public class TextFileReader
+{
+	final private static String docLocation = "E:\\NEON_Eclipse\\2500-Spondike, Justin\\TextFileReader\\GreenEggsAndHam.txt";
+	/* This program will read a text file and parse every word and place it in a list.
+	 * It will count how many times a word is present in the document and in some cases
+	 * order the list (alphabetically and dynamically by occurrence). 
+	 */ 
+	public static void main(String[] args)
+	{
+/*		Scanner scanner = new Scanner(System.in);
+		SortedLL list = new SortedLL();
+		while(true)
+		{
+			String answer = scanner.nextLine();
+			if(answer.contains("add "))
+			{
+				if(list.contains(answer))list.incrementWord(answer);
+				else list.add(answer.substring(4));
+			}
+			if(answer.contains("contains "))
+			{
+				System.out.println(list.contains(answer.substring(9)));
+				System.out.println(list.location.getValue());
+			}
+			if(answer.equals("exit"))
+			{
+				break;				
+			}
+			list.print();
+		}		
+		System.exit(0);    */
+		for(int whichList=0; whichList<5; whichList++)		//iterates through all of the different lists
+		{
+			final long startTime = System.currentTimeMillis();//sets the start time of the program
+			File x = new File(docLocation);
+			try
+			{
+				Scanner text = new Scanner(x);
+				switch(whichList)						//depending on the choice in the variable above it will run only one List (as specified)
+				{
+				case 0: readList(text);
+							final long endTime0 = System.currentTimeMillis();//sets the end time of the program
+							System.out.println("The program took " + (endTime0-startTime) + " milliseconds to read the passage.\n");//prints how long it took the program to run in milliseconds to read the passage
+							break;
+				case 1: unsortedLL(text);
+							final long endTime1 = System.currentTimeMillis();//sets the end time of the program
+							System.out.println("The program took " + (endTime1-startTime) + " milliseconds to List the pasasage (Unsorted).\n");//prints how long it took the program to run in milliseconds the Unsorted list
+							break;
+				case 2: sortedLL(text);
+							final long endTime2 = System.currentTimeMillis();//sets the end time of the program
+							System.out.println("The program took " + (endTime2-startTime) + " milliseconds to Alphabetically Sort the passage.\n");//prints how long it took the program to run in milliseconds the alphabetical list
+							break;
+				case 3: dynamicLL(text);
+							final long endTime3 = System.currentTimeMillis();//sets the end time of the program
+							System.out.println("The program took " + (endTime3-startTime) + " milliseconds to Dynamically sort the passage.\n");//prints how long it took the program to run in milliseconds the dynamically sorted linked list
+							break;
+				case 4: incrementativeLL(text);
+							final long endTime4 = System.currentTimeMillis();//sets the end time of the program
+							System.out.println("The program took " + (endTime4-startTime) + " milliseconds to Incrementatively Sort the passage.\n");//prints how long it took the program to run in milliseconds the incrementative list
+							break;
+			}
+			} catch (FileNotFoundException e)
+			{
+				System.out.println("The file was not found.");	//Likely the only error that may be encountered
+			}
+		}
+	}
+
+	private static String trim(String word)
+	{
+		String s = "\"\':;-.,?!<>_=+@#$%^&*()`~\\|[]{}";	//list of all possible punctuation
+		while(word.length()!=0&&(s.contains(""+word.charAt(0))||s.contains(""+word.charAt(word.length()-1)))) //if the word is longer than 0 and there is punctuation at the beginning or the end it will delete it
+		{
+			if(s.contains(""+word.charAt(0)))			//if the first character in a word is a piece of punctuation it will delete it
+			{
+				String tempWord="";						//uses this as the new word that is getting edited
+				for(int i=1; i<word.length(); i++)		//this starts at the second character and parses each character
+				{
+					tempWord += ""+word.charAt(i);		//appending it to the temporary word
+				}
+				word = tempWord;						//the final result is the same word with no beginning punctuation
+			}
+			if(word.length()!=0&&s.contains(""+word.charAt(word.length()-1)))//deletes any ending punctuation
+			{
+				String tempWord="";						//uses this as the new word that is getting edited
+				for(int i=0; i<word.length()-1; i++)	//starts at the beginning of the word and stops one character short of the end
+				{
+					tempWord += ""+word.charAt(i);		//appends each character to the temporary word, omitting the final character
+				}
+				word = tempWord;						//the final result is the same word with no ending punctuation
+			}
+		}
+		word=word.toLowerCase();						//ensures the entire word is lower case
+		return word;
+	}
+	private static void readList(Scanner text)
+	{
+		int numOfWords=0;
+		System.out.println("The first 100 words of this passage are:");
+		while(text.hasNext())								//will continue to loop so long as there are words left in the file
+		{
+			String word = trim(text.next());				//grabs and trims the next word in the document
+			if(numOfWords<100) System.out.println(word); 	//printing the lists will be another constant in the program, so adding that function to the control case will allow for greater runtime accuracy
+			numOfWords++;
+		}
+		System.out.println("Done");							//signal to show the program is finished running
+		System.out.println("There are "+numOfWords+" words in the file.");
+	}
+	public static void unsortedLL(Scanner text)
+	{
+		UnsortedLL list = new UnsortedLL();
+		while(text.hasNext())								//will continue to loop so long as there are words left in the file
+		{
+			String word = trim(text.next()).toLowerCase();	//trims the next word and ensures the entire word is lower case
+			if(list.contains(word))							//if the word is present in the list
+			{
+				list.incrementWord(word);					//it will increment the count of the word
+			}
+			else list.add(word);							//otherwise it will add it to the list
+		}
+		System.out.println("There are "+list.distinctWords()+" different words in this passage.\n"
+							+list.numOfWords()+" words in total.");		//print the number of words in the passage
+		list.print();
+	}
+	public static void sortedLL(Scanner text)
+	{
+		SortedLL list = new SortedLL();
+		while(text.hasNext())								//will continue to loop so long as there are words left in the file
+		{
+			String word = trim(text.next()).toLowerCase();	//trims the next word and ensures the entire word is lower case
+			System.out.println(word);
+			if(list.contains(word))							//if the word is present in the list
+			{
+				list.incrementWord(word);					//it will increment the count of the word
+			}
+			else list.add(word);							//otherwise it will add it to the list
+		}
+		System.out.println("There are "+list.distinctWords()+" different words in this passage.\n"
+							+list.numOfWords()+" words in total.");		//print the number of words in the passage
+		list.print();
+	}
+	public static void dynamicLL(Scanner text)
+	{
+		DynamicLL list = new DynamicLL();
+		while(text.hasNext())								//will continue to loop so long as there are words left in the file
+		{
+			String word = trim(text.next()).toLowerCase();	//trims the next word and makes it lower case
+			if(list.contains(word))							//if the word is present in the list
+			{
+				list.incrementWord(word);					//it will increment the count of the word
+			}
+			else list.add(word);							//otherwise it will add it to the list
+		}
+		System.out.println("There are "+list.distinctWords()+" different words in this passage.\n"
+							+list.numOfWords()+" words in total.");		//print the number of words in the passage
+	}	
+	public static void incrementativeLL(Scanner text)
+	{
+		IncrementativeLL list = new IncrementativeLL();
+		while(text.hasNext())								//will continue to loop so long as there are words left in the file
+		{
+			String word = trim(text.next()).toLowerCase();	//trims the next word and ensures the entire word is lower case
+			if(list.contains(word))							//if the word is present in the list
+			{
+				list.incrementWord(word);					//it will increment the count of the word
+			}
+			else list.add(word);							//otherwise it will add it to the list
+		}
+		System.out.println("There are "+list.distinctWords()+" different words in this passage.\n"
+							+list.numOfWords()+" words in total.");		//print the number of words in the passage
+	}
+}

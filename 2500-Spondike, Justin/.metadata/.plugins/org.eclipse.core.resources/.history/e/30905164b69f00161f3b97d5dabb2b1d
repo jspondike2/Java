@@ -1,0 +1,20 @@
+
+public class SortedLL extends ListDefaults
+{
+/* This list will grab each new word that the program parses from the text file
+ * and throws it into a sorted linked list. When there is a word that is not
+ * present in the list it will find the proper placement of the word (alphabetically)
+ * If ever there is a word that is already present on the list it will increment the
+ * counter of that word, not compromising the order of the list.
+ */
+	public SortedLL()
+	{
+		
+	}
+	public void add(String text)
+	{
+		String x="abc";
+		String y="aabc";
+		System.out.println(x.compareTo(y));
+	}
+}

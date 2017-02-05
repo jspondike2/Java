@@ -1,0 +1,49 @@
+
+public class BiTree
+{
+	TreeNode tree;
+	private TreeNode currentNode;
+	private TreeNode previousNode;
+	int numOfNodes=0;
+	
+	BiTree()
+	{
+		
+	}
+	public void add(String word)
+	{
+		currentNode=tree;						//sets the start pointer to the root of the tree
+		previousNode=currentNode;						//initializes the "Laggard" to null
+		while(currentNode!=null)				//so long as the current node hasn't fallen off the tree, keep moving down
+		{
+			System.out.print(currentNode + " " + previousNode + "\n");
+			if(currentNode.getValue().equals(word)){currentNode.increment(); return;}	//increment if the words are the same
+			previousNode.setLink(currentNode); 											//previous pointer follows behind the current node pointer
+				//if the word is less than the current word, go left, otherwise go right
+			currentNode = ((word.compareTo((String)currentNode.getValue())<0) ? currentNode.getLeft() : currentNode.getRight());
+			System.out.print(currentNode + " " + previousNode + "\n");
+		}
+
+		if(previousNode==null)
+			tree = new TreeNode(word);
+		else
+		{
+			TreeNode node = new TreeNode(word);
+			if(word.compareTo((String)previousNode.getValue())<0)
+					previousNode.setLeft(node);
+			else	previousNode.setRight(node);
+		}
+		numOfNodes++;
+	}
+	public void print()
+	{
+		// TODO Print out the first 100 words
+		
+	}
+	public void printStats()
+	{
+		//TODO Print out the number of words and other stats
+		
+	}
+	
+}

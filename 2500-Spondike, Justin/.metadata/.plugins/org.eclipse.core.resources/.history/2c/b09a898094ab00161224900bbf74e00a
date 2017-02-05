@@ -1,0 +1,24 @@
+
+public class HashTableListDefault
+{
+/* This is an application of hash Tables using our already constructed
+ * text file reader program. It will parse the list as usual, and when
+ * sorting the words, it will rely on the Hash Function in order to 
+ * properly place the word in its location. (This is an array based
+ * collection of Linked lists.)
+ */
+	
+	WordNode[] list;
+	int HashLocation; 			//variable to hold the location of the previous Hash Location, so once found, it doesnt have to re-hash the input
+	
+	HashTableListDefault()
+	{
+		//default constructor
+	}
+	HashTableListDefault(int x)
+	{
+		//allows for variably sized array in the Hash Table
+		list = new WordNode[x];
+
+	}
+}

@@ -1,0 +1,20 @@
+
+public class DynamicLL extends ListDefaults
+{
+/* This list will grab each new word that the program parses from the text file
+ * and throws it into an unsorted linked list. If ever there is a word that is
+ * already present on the list it will increment the counter of that word, 
+ * AND bring that word to the front of the list. This creates a dynamic list
+ * where the most prominent words are going to be closer to the front of the list.
+ */
+	public DynamicLL()
+	{
+		// This default constructor creates a DynamicLL object.
+	}
+	public void incrementWord(String word)
+	{
+		location.incrememntCount();
+		previous.setLink(location.getLink());
+		location.setLink(list);
+	}
+}

@@ -1,0 +1,549 @@
+/* Justin Spondike
+ * Date: 12/2/2016
+ * EECS 2500 Linear Data Structures
+ */
+public class NumericSorts
+{
+	/* This program sorts random arrays of integers
+	 * using simple sorting algorithms and unique
+	 * shell sort operations, researching the efficiency
+	 * and speed of each one. All but quick sort are 
+	 * implemented without using outside methods.
+	 * This ensures time isn't falsely aaccured from
+	 * the calling of several methods, multiple times.
+	 */
+	
+	public static long quickSwaps;
+	public static long quickComparisons;
+	public static void main(String[] args)
+	{
+		boolean selectionActive = false; 							//sets a condition that will enable selection sort
+		boolean bubbleActive = false;								//or bubble sort
+		boolean insertionActive = false; 							//or insertion sort
+		boolean quickActive = false; 								//or quick sort
+		boolean hibbardActive = false;								//...
+		boolean knuthActive = false; 								//...
+		boolean prattActive = true; 								//or shell sort, just by changing the boolean values
+		float avgNoomTime;											//running sum to hold the numerator of the average equation
+		float avgDenomReps;											//running sum to hold the denominator of the average equation
+		long comparisons;
+		long comparisonsNoom;										//running sum to hold the numeraator of the average comparisons equation
+		long comparisonsDenom;										//running sum to hold the denominator of the average comparisons equaation (I later realized I could have divided by the repcount, but my code is made to decrement the repcount to 0, so without rewriting my for loops, this was the easier way to implement averages)
+		long swaps;
+		long swapsNoom;												//running sum to hold the numerator of the average swaps equation
+		long swapsDenom;											//running sum to hold the denomenator of the average swaps equation
+		long work;													//this will be the average number of comparisons added to the average number of swaps
+		
+		if(!(selectionActive||bubbleActive||insertionActive||quickActive||hibbardActive||knuthActive||prattActive)) 
+			System.out.print("Please choose a sorting algorithm to run\nby changing the Active variables at the\ntop of main.");
+//		System.out.println("SELECTION SORT\n");
+//Selection Sort		
+		if(selectionActive)
+		{
+			for(int i = 10000; i<1000001; i+=10000)				//reiterates the entire sort using a different sized array (more values)
+			{
+				comparisons=swaps=0;
+				avgNoomTime=avgDenomReps=0;							//initializes each iteration to zero
+				comparisonsNoom=comparisonsDenom=0;					
+				swapsNoom=swapsDenom=0;
+				work=0;
+				
+				for(int repCount=1; repCount>0; repCount--)		//replays the sort with new random values so that more accurate average can be determined
+				{
+					//fill with random data
+					int[] values = new int[i];						//creates an empty array of values to be sorted
+					for(int j = 0; j<i; j++)						//for loop generates random values in every element of the array
+					{
+						values[j] = (int)(Math.random()*1000000);	//multiplies math.random value times "i" so that it will be a value between 0 - 999,999
+					}
+					comparisons=swaps=0;
+					comparisonsNoom=comparisonsDenom=0;				//resets the average stats counters for eacah iteration
+					swapsNoom=swapsDenom=0;
+					work=0;
+					
+					long startTime = System.currentTimeMillis();	//grabs the time before the sorting algorithm starts
+	
+					//Selection Sort
+					int startIndex = 0;								//creates the barrier that separates the sorted and unsorted sections
+					int endIndex   = i-1;							//this is the end of the array
+					int indexOfMin = 0;								//holds the value of the index at which the smallest element exists
+					for(int h = 0; h<i; h++)						//moves the sorted barrier until it reaches the end of the array
+					{
+						for(int currIndex = startIndex; currIndex<=endIndex; currIndex++)//checks where the smallest element is
+						{
+							if(values[currIndex]<values[indexOfMin])//if the value in the current index is smaller than the value that was already found,
+							{
+								indexOfMin = currIndex;				//save that index
+							}
+							comparisons++;
+						}
+						int k = values[indexOfMin];					//this will save the current value in the smallest 
+						values[indexOfMin]=values[startIndex];		//stores the value in the first unsorted location where the smallest value was
+						values[startIndex]=k;						//retrieves the stored value and places it in the first unsorted location
+						swaps++;
+						
+						startIndex++;								//increments the sorted barrier
+
+					}
+					long stopTime = System.currentTimeMillis();		//grabs the time after the list has been sorted
+					avgNoomTime += stopTime-startTime;				//adds the runtime to the list of times (numerator of average equation)
+					swapsNoom+=swaps;								//adds the number of swaps of each round to the running sum
+					comparisonsNoom+=comparisons;					//adds the number of comparisons of each round to the running sum
+					
+					avgDenomReps ++;								//increments the number of times (denominator of average equations)
+					comparisonsDenom++;								
+					swapsDenom++;					
+				}
+				float averageTime = avgNoomTime/avgDenomReps;		//average time calculations
+				long avgComparisons = (int)(comparisonsNoom/comparisonsDenom);
+				long avgSwaps = (int)(swapsNoom/swapsDenom);
+				work = avgSwaps + avgComparisons;
+//				System.out.println("Selection Sort:\n"+i+"	elements\n"+averageTime/1000.0+" seconds\n"+avgComparisons+"	comparisons\n"+avgSwaps+"	swaps\n"+"Total Work: "+work+"\n\n");	//prints statistics
+				System.out.print(i+"		");
+				System.out.print(averageTime/(float)1000.0+"			");		//prints only the times of each sized array (instead of the formatting along with it)
+				System.out.print(comparisonsNoom/comparisonsDenom+"			");//prints only the average comparisons of each sized array (instead of the formatting along with it)
+				System.out.println(swapsNoom/swapsDenom);			//prints only the times of each sized array (instead of the formatting along with it)
+//				System.out.println(work);							//printsw only the work of each sized array
+			}
+		}//Selection
+//		System.out.println("\n\nBUBBLE SORT\n");
+//Bubble Sort		
+		if(bubbleActive)
+		{
+			for(int i = 100; i<20001; i+=100)						//reiterates the entire sort using a different sized array (more values)
+			{
+				comparisons=swaps=0;
+				avgNoomTime=avgDenomReps=0;							//initializes each iteration to zero
+				comparisonsNoom=comparisonsDenom=0;					
+				swapsNoom=swapsDenom=0;
+				work=0;
+				
+				for(int repCount=10; repCount>0; repCount--)		//replays the sort with new random values so that more accurate average can be determined
+				{
+					//fill with random data
+					int[] values = new int[i];						//creates an empty array of values to be sorted
+					for(int j = 0; j<values.length; j++)			//for loop generates random values in every element of the array
+					{
+						values[j] = (int)(Math.random()*1000000);	//multiplies math.random value times "i" so that it will be a value between 0 - 999,999
+					}
+					comparisons=swaps=0;
+					comparisonsNoom=comparisonsDenom=0;				//resets the average stats counters for eacah iteration
+					swapsNoom=swapsDenom=0;
+					work=0;
+					
+					long startTime = System.currentTimeMillis();	//grabs the time before the sorting algorithm starts
+					
+					//Bubble Sort
+					int endIndex = i-1;
+					for(int startIndex = 0; startIndex<endIndex; startIndex++)	//moves the sorted barrier until it reaches the end of the array
+					{
+						for(int index = endIndex; index>startIndex; index--)	//iterates through the unsorted portion of the array
+						{
+							if(values[index]<values[index-1])		//if the value is smaller than the one before it
+							{
+								int k = values[index-1];			//this will save the current value in the smallest 
+								values[index-1]=values[index];		//stores the value in the preceding location where the larger value was
+								values[index]=k;					//retrieves the stored value and places it in the latter location
+								swaps++;
+							}
+							comparisons++;
+						}
+					}					
+					long stopTime = System.currentTimeMillis();		//grabs the time after the list has been sorted
+					avgNoomTime += stopTime-startTime;				//adds the runtime to the list of times (numerator of average equation)
+					swapsNoom+=swaps;								//adds the number of swaps of each round to the running sum
+					comparisonsNoom+=comparisons;					//adds the number of comparisons of each round to the running sum
+					
+					avgDenomReps ++;								//increments the number of times (denominator of average equations)
+					comparisonsDenom++;								
+					swapsDenom++;					
+				}
+				float averageTime = avgNoomTime/avgDenomReps;		//average time calculations
+				long avgComparisons = (int)(comparisonsNoom/comparisonsDenom);
+				long avgSwaps = (int)(swapsNoom/swapsDenom);
+				work = avgSwaps + avgComparisons;
+				System.out.println("Bubble Sort:\n"+i+"	elements\n"+averageTime/1000.0+" seconds\n"+avgComparisons+"	comparisons\n"+avgSwaps+"	swaps\n"+"Total Work: "+work+"\n\n");	//prints statistics
+//				System.out.print(i+"		");
+//				System.out.print(averageTime/(float)1000.0+"			");		//prints only the times of each sized array (instead of the formatting along with it)
+//				System.out.print(comparisonsNoom/comparisonsDenom+"			");//prints only the average comparisons of each sized array (instead of the formatting along with it)
+//				System.out.println(swapsNoom/swapsDenom);			//prints only the times of each sized array (instead of the formatting along with it)
+//				System.out.println(work);							//printsw only the work of each sized array
+			}
+		}//Bubble	
+//		System.out.println("\n\nINSERTION SORT\n");
+//Insertion Sort
+		if(insertionActive)
+		{
+			for(int i = 10000; i<1000001; i+=10000)					//reiterates the entire sort using a different sized array (more values)
+			{
+				comparisons=swaps=0;
+				avgNoomTime=avgDenomReps=0;							//initializes each iteration to zero
+				comparisonsNoom=comparisonsDenom=0;					
+				swapsNoom=swapsDenom=0;
+				work=0;
+				
+				for(int repCount=10; repCount>0; repCount--)		//replays the sort with new random values so that more accurate average can be determined
+				{
+					//fill with random data
+					int[] values = new int[i];						//creates an empty array of values to be sorted
+					for(int j = 0; j<values.length; j++)			//for loop generates random values in every element of the array
+					{
+						values[j] = (int)(Math.random()*1000000);	//multiplies math.random value times "i" so that it will be a value between 0 - 999,999
+					}
+					comparisons=swaps=0;
+					comparisonsNoom=comparisonsDenom=0;				//resets the average stats counters for eacah iteration
+					swapsNoom=swapsDenom=0;
+					work=0;
+					
+					long startTime = System.currentTimeMillis();	//grabs the time before the sorting algorithm starts
+					//insertion sort
+					int endIndex = i;
+					for(int startIndex = 1; startIndex<endIndex; startIndex++)	//moves the sorted barrier until it reaches the end of the array
+					{
+						boolean finished = false;					//sets a boolean condition for the while loop to eventually stop iterating
+						int current = startIndex;					//sets the current element equal to the next unsorted element
+						boolean moreToSearch = true;				//sets a boolean condition for the while loop to eventually stop iterating
+						while(moreToSearch && !finished)			//iterates so long as both conditions are satisfied
+						{
+							if(values[current]<values[current-1])	//if the current value is less than the value before it, it will swap the two values
+							{
+								int k = values[current];			//this will save the current value in the smallest 
+								values[current]=values[current-1];	//stores the value in the preceding location where the larger value was
+								values[current-1]=k;				//retrieves the stored value and places it in the latter location
+								swaps++;
+								current--;							//decrements the value of the current index, to follow the same value through the array
+								moreToSearch = (current != 0);		//so long as the current index is not the first index (index 0) the while loop condition will hold true
+							}
+							else
+								finished = true;					//as soon as a current value is greater than the value before it, it is finished with its upward swaps
+							comparisons++;
+						}
+					}
+					long stopTime = System.currentTimeMillis();		//grabs the time after the list has been sorted
+					avgNoomTime += stopTime-startTime;				//adds the runtime to the list of times (numerator of average equation)
+					swapsNoom+=swaps;								//adds the number of swaps of each round to the running sum
+					comparisonsNoom+=comparisons;					//adds the number of comparisons of each round to the running sum
+					
+					avgDenomReps ++;								//increments the number of times (denominator of average equations)
+					comparisonsDenom++;								
+					swapsDenom++;					
+				}
+				float averageTime = avgNoomTime/avgDenomReps;		//average time calculations
+				long avgComparisons = (int)(comparisonsNoom/comparisonsDenom);
+				long avgSwaps = (int)(swapsNoom/swapsDenom);
+				work = avgSwaps + avgComparisons;
+//				System.out.println("Insertion Sort:\n"+i+"	elements\n"+averageTime/1000.0+" seconds\n"+avgComparisons+"	comparisons\n"+avgSwaps+"	swaps\n"+"Total Work: "+work+"\n\n");	//prints statistics
+				System.out.print(i+"		");
+				System.out.print(averageTime/(float)1000.0+"			");		//prints only the times of each sized array (instead of the formatting along with it)
+				System.out.print(comparisonsNoom/comparisonsDenom+"			");//prints only the average comparisons of each sized array (instead of the formatting along with it)
+				System.out.println(swapsNoom/swapsDenom);			//prints only the times of each sized array (instead of the formatting along with it)
+//				System.out.println(work);							//printsw only the work of each sized array
+			}
+		}//insertion
+//		System.out.println("\n\nQUICK SORT\n");	
+//Quick Sort
+		if(quickActive)
+		{
+			for(int i = 100; i<20001; i+=100)						//reiterates the entire sort using a different sized array (more values)
+			{
+				quickComparisons=quickSwaps=0;
+				avgNoomTime=avgDenomReps=0;							//initializes each iteration to zero
+				comparisonsNoom=comparisonsDenom=0;					
+				swapsNoom=swapsDenom=0;
+				work=0;
+		
+				for(int repCount=1000; repCount>0; repCount--)		//replays the sort with new random values so that more accurate average can be determined
+				{
+					//fill with random data
+					int[] values = new int[i];						//creates an empty array of values to be sorted
+					for(int j = 0; j<values.length; j++)			//for loop generates random values in every element of the array
+					{
+						values[j] = (int)(Math.random()*1000000);	//multiplies math.random value times "i" so that it will be a value between 0 - 999,999
+					}
+					quickComparisons=quickSwaps=0;
+					comparisonsNoom=comparisonsDenom=0;				//resets the average stats counters for eacah iteration
+					swapsNoom=swapsDenom=0;
+					work=0;
+					long startTime = System.nanoTime();				//grabs the time before the sorting algorithm starts
+					//Quick Sort
+					quickSort(values, 0, i-1);
+					
+					long stopTime = System.nanoTime();				//grabs the time after the list has been sorted
+					avgNoomTime += stopTime-startTime;				//adds the runtime to the list of times (numerator of average equation)
+					swapsNoom+=quickSwaps;							//adds the number of swaps of each round to the running sum
+					comparisonsNoom+=quickComparisons;				//adds the number of comparisons of each round to the running sum
+
+					avgDenomReps ++;								//increments the number of times (denominator of average equations)
+					comparisonsDenom++;								
+					swapsDenom++;					
+				}
+				float averageTime = avgNoomTime/avgDenomReps;		//average time calculations
+				long avgComparisons = (int)(comparisonsNoom/comparisonsDenom);
+				long avgSwaps = (int)(swapsNoom/swapsDenom);
+				work = avgSwaps + avgComparisons;
+				System.out.println("Quick Sort:\n"+i+"	elements\n"+averageTime/1000000000.0+" seconds\n"+avgComparisons+"	comparisons\n"+avgSwaps+"	swaps\n"+"Total Work: "+work+"\n\n");	//prints statistics
+//				System.out.print(i+"		");
+//				System.out.print(averageTime/(float)1000000000.0+"			");		//prints only the times of each sized array (instead of the formatting along with it)
+//				System.out.print(comparisonsNoom/comparisonsDenom+"			");//prints only the average comparisons of each sized array (instead of the formatting along with it)
+//				System.out.println(swapsNoom/swapsDenom);			//prints only the times of each sized array (instead of the formatting along with it)
+//				System.out.println(work);							//printsw only the work of each sized array
+			}
+		}//quick
+		System.out.println("\n\nHIBBARD SORT\n");
+//Shell Sort	(Hibbard's Sequence)	
+		if(hibbardActive)
+		{
+			for(int i = 10; i<151; i+=1)						//reiterates the entire sort using a different sized array (more values)
+			{
+				comparisons=swaps=0;
+				avgNoomTime=avgDenomReps=0;							//initializes each iteration to zero
+				comparisonsNoom=comparisonsDenom=0;					
+				swapsNoom=swapsDenom=0;
+				work=0;
+				
+				for(int repCount=100000; repCount>0; repCount--)		//replays the sort with new random values so that more accurate average can be determined
+				{
+					//fill with random data
+					int[] values = new int[i];						//creates an empty array of values to be sorted
+					for(int j = 0; j<i; j++)						//for loop generates random values in every element of the array
+					{
+						values[j] = (int)(Math.random()*1000000);	//multiplies math.random value times "i" so that it will be a value between 0 - 999,999
+					}
+					comparisons=swaps=0;
+					comparisonsNoom=comparisonsDenom=0;				//resets the average stats counters for eacah iteration
+					swapsNoom=swapsDenom=0;
+					work=0;
+					
+					long startTime = System.currentTimeMillis();	//grabs the time before the sorting algorithm starts
+	
+					//Shell Sort   (Hibbard's Sequence)
+					int d=1;										//sets initial value to 1
+					while(d<i)										//while the value is less than the number of elements in the array, multiply by 2
+						d = d*2;
+					d=(--d/2);										//as soon as d has surpassed the number of elements, subtract 1 and divide by 2
+					do
+					{
+						for (int l = 0; l < (i - d); l++)  			// each “comb” position
+					        for (int m = l; m >= 0; m -= d) 		// Insertion sort, except it increments along d, not 1
+					           if (values[m] <= values[m + d]){comparisons++; break;}
+					           else 
+					           {
+					        	   comparisons++;
+					        	   int n = values[m];				//this will save the current value in the smallest 
+					        	   values[m]=values[m+d];			//stores the value in the preceding location where the larger value was
+					        	   values[m+d]=n;					//retrieves the stored value and places it in the latter location 
+					        	   swaps++;
+					           }
+					     d/=2; 										// next pass decreases the size of the interval
+					}while(d>0);
+					
+					
+					long stopTime = System.currentTimeMillis();		//grabs the time after the list has been sorted
+					avgNoomTime += stopTime-startTime;				//adds the runtime to the list of times (numerator of average equation)
+					swapsNoom+=swaps;								//adds the number of swaps of each round to the running sum
+					comparisonsNoom+=comparisons;					//adds the number of comparisons of each round to the running sum
+					
+					avgDenomReps ++;								//increments the number of times (denominator of average equations)
+					comparisonsDenom++;								
+					swapsDenom++;					
+				}
+				float averageTime = avgNoomTime/avgDenomReps;		//average time calculations
+				long avgComparisons = (int)(comparisonsNoom/comparisonsDenom);
+				long avgSwaps = (int)(swapsNoom/swapsDenom);
+				work = avgSwaps + avgComparisons;
+//				System.out.println("Hibbard's Sort:\n"+i+"	elements\n"+averageTime/1000.0+" seconds\n"+avgComparisons+"	comparisons\n"+avgSwaps+"	swaps\n"+"Total Work: "+work+"\n\n");	//prints statistics
+				System.out.print(i+"		");
+				System.out.print(averageTime/(float)1000.0+"			");		//prints only the times of each sized array (instead of the formatting along with it)
+				System.out.print(comparisonsNoom/comparisonsDenom+"			");//prints only the average comparisons of each sized array (instead of the formatting along with it)
+				System.out.println(swapsNoom/swapsDenom);			//prints only the times of each sized array (instead of the formatting along with it)
+//				System.out.println(work);							//printsw only the work of each sized array
+			}
+		}//hibbard
+		System.out.println("\n\nKNUTH SORT\n");
+//Shell Sort	(Knuth's Sequence)	
+		if(knuthActive)
+		{
+			for(int i = 10; i<151; i+=1)						//reiterates the entire sort using a different sized array (more values)
+			{
+				comparisons=swaps=0;
+				avgNoomTime=avgDenomReps=0;							//initializes each iteration to zero
+				comparisonsNoom=comparisonsDenom=0;					
+				swapsNoom=swapsDenom=0;
+				work=0;
+				
+				for(int repCount=100000; repCount>0; repCount--)		//replays the sort with new random values so that more accurate average can be determined
+				{
+					//fill with random data
+					int[] values = new int[i];						//creates an empty array of values to be sorted
+					for(int j = 0; j<i; j++)						//for loop generates random values in every element of the array
+					{
+						values[j] = (int)(Math.random()*1000000);	//multiplies math.random value times "i" so that it will be a value between 0 - 999,999
+					}
+					comparisons=swaps=0;
+					comparisonsNoom=comparisonsDenom=0;				//resets the average stats counters for eacah iteration
+					swapsNoom=swapsDenom=0;
+					work=0;
+					
+					long startTime = System.currentTimeMillis();	//grabs the time before the sorting algorithm starts
+	
+					//Shell Sort   (Knuth's Sequence)
+					int d=1;										//sets initial value to 1
+					while(d<i)										//while the value is less than the number of elements in the array, multiply by 3 and add 1
+					d = (d*3)+1;
+					d /= 3;											//as soon as d has surpassed the number of elements, divide by 3
+					do
+					{
+						for (int l = 0; l < (i - d); l++)  			// each “comb” position
+					        for (int m = l; m >= 0; m -= d) 		// Insertion sort, except it increments along d, not 1
+					           if (values[m] <= values[m + d]){comparisons++;break;}
+					           else 
+					           {
+					        	   comparisons++;
+					        	   int n = values[m];				//this will save the current value in the smallest 
+					        	   values[m]=values[m+d];			//stores the value in the preceding location where the larger value was
+					        	   values[m+d]=n;					//retrieves the stored value and places it in the latter location 
+					        	   swaps++;
+					           }
+					     d/=3; 										// next pass decreases the size of the interval
+					}while(d>0);
+					long stopTime = System.currentTimeMillis();		//grabs the time after the list has been sorted
+					avgNoomTime += stopTime-startTime;				//adds the runtime to the list of times (numerator of average equation)
+					swapsNoom+=swaps;								//adds the number of swaps of each round to the running sum
+					comparisonsNoom+=comparisons;					//adds the number of comparisons of each round to the running sum
+					
+					avgDenomReps ++;								//increments the number of times (denominator of average equations)
+					comparisonsDenom++;								
+					swapsDenom++;					
+				}
+				float averageTime = avgNoomTime/avgDenomReps;		//average time calculations
+				long avgComparisons = (int)(comparisonsNoom/comparisonsDenom);
+				long avgSwaps = (int)(swapsNoom/swapsDenom);
+				work = avgSwaps + avgComparisons;
+//				System.out.println("Knuth's Sort:\n"+i+"	elements\n"+averageTime/1000.0+" seconds\n"+avgComparisons+"	comparisons\n"+avgSwaps+"	swaps\n"+"Total Work: "+work+"\n\n");	//prints statistics
+				System.out.print(i+"		");
+				System.out.print(averageTime/(float)1000.0+"			");		//prints only the times of each sized array (instead of the formatting along with it)
+				System.out.print(comparisonsNoom/comparisonsDenom+"			");//prints only the average comparisons of each sized array (instead of the formatting along with it)
+				System.out.println(swapsNoom/swapsDenom);			//prints only the times of each sized array (instead of the formatting along with it)
+//				System.out.println(work);							//printsw only the work of each sized array
+			}
+		}//knuth
+		System.out.println("\n\nPRATT SORT\n");
+//Shell Sort	(Pratt's Sequence)	
+		if(prattActive)
+		{
+			for(int i = 10; i<151; i+=1)						//reiterates the entire sort using a different sized array (more values)
+			{
+				comparisons=swaps=0;
+				avgNoomTime=avgDenomReps=0;							//initializes each iteration to zero
+				comparisonsNoom=comparisonsDenom=0;					
+				swapsNoom=swapsDenom=0;
+				work=0;
+				
+				for(int repCount=100000; repCount>0; repCount--)		//replays the sort with new random values so that more accurate average can be determined
+				{
+					//fill with random data
+					int[] values = new int[i];						//creates an empty array of values to be sorted
+					for(int j = 0; j<i; j++)						//for loop generates random values in every element of the array
+					{
+						values[j] = (int)(Math.random()*1000000);	//multiplies math.random value times "i" so that it will be a value between 0 - 999,999
+					}
+					comparisons=swaps=0;
+					comparisonsNoom=comparisonsDenom=0;				//resets the average stats counters for eacah iteration
+					swapsNoom=swapsDenom=0;
+					work=0;
+					
+					long startTime = System.currentTimeMillis();	//grabs the time before the sorting algorithm starts
+
+					//Shell Sort   (Pratt's Sequence)
+					int p=0;										//index of interval array
+					int k;											//current value of index
+						//Pratt's sequence (values up until 995328)
+					int[] d = {0, 1, 2, 3, 4, 6, 8, 9, 12, 16, 18, 24, 27, 32, 36, 48, 54, 64, 72, 81, 96, 108, 128, 144, 162, 192, 216, 243, 256, 288, 324, 384, 432, 486, 512, 576, 648, 729, 768, 864, 972, 1024, 1152, 1296, 1458, 1536, 1728, 1944, 2048, 2187, 2304, 2592, 2916, 3072, 3456, 3888, 4096, 4374, 4608, 5184, 5832, 6144, 6561, 6912, 7776, 8192, 8748, 9216, 10368, 11664, 12288, 13122, 13824, 15552, 16384, 17496, 18432, 19683, 20736, 23328, 24576, 26244, 27648, 31104, 32768, 34992, 36864, 39366, 41472, 46656, 49152, 52488, 55296, 59049, 62208, 65536, 69984, 73728, 78732, 82944, 93312, 98304, 104976, 110592, 118098, 124416, 131072, 139968, 147456, 157464, 165888, 177147, 186624, 196608, 209952, 221184, 236196, 248832, 262144, 279936, 294912, 314928, 331776, 354294, 373248, 393216, 419904, 442368, 472392, 497664, 524288, 531441, 559872, 589824, 629856, 663552, 708588, 746496, 786432, 839808, 884736, 944784, 995328, 1000005};//the final value (1000005) is a dummy value that will break the while loop and allow Pratt's sequence to process the 1000000 element array
+					while(d[p]<i)									//while the current interval is less than the size
+						p++;										//increment the interval
+					p--;											//and then take the previous interval (after the interval size has surpassed the size of the array)
+					do
+					{
+						k = d[p];
+						for (int l = 0; l < (i - k); l++)  			// each “comb” position
+					        for (int m = l; m >= 0; m -= k) 		// Insertion sort, except it increments along d, not 1
+					           if (values[m] <= values[m + k]){comparisons++;break;}
+					           else 
+					           {
+					        	   comparisons++;
+					        	   int n = values[m];				//this will save the current value in the smallest 
+					        	   values[m]=values[m+k];			//stores the value in the preceding location where the larger value was
+					        	   values[m+k]=n;					//retrieves the stored value and places it in the latter location 
+					        	   swaps++;
+					           }
+					     p--; 										// next pass decreases the size of the interval
+					}while(p>=0);
+
+					long stopTime = System.currentTimeMillis();		//grabs the time after the list has been sorted
+					avgNoomTime += stopTime-startTime;				//adds the runtime to the list of times (numerator of average equation)
+					swapsNoom+=swaps;								//adds the number of swaps of each round to the running sum
+					comparisonsNoom+=comparisons;					//adds the number of comparisons of each round to the running sum
+					
+					avgDenomReps ++;								//increments the number of times (denominator of average equations)
+					comparisonsDenom++;								
+					swapsDenom++;					
+				}
+				float averageTime = avgNoomTime/avgDenomReps;		//average time calculations
+				long avgComparisons = (int)(comparisonsNoom/comparisonsDenom);
+				long avgSwaps = (int)(swapsNoom/swapsDenom);
+				work = avgSwaps + avgComparisons;
+//				System.out.println("Pratt's Sort:\n"+i+"	elements\n"+averageTime/1000.0+" seconds\n"+avgComparisons+"	comparisons\n"+avgSwaps+"	swaps\n"+"Total Work: "+work+"\n\n");	//prints statistics
+				System.out.print(i+"		");
+//				System.out.print(averageTime/(float)1000.0+"			");		//prints only the times of each sized array (instead of the formatting along with it)
+//			System.out.print(comparisonsNoom/comparisonsDenom+"			");//prints only the average comparisons of each sized array (instead of the formatting along with it)
+//				System.out.println(swapsNoom/swapsDenom);			//prints only the times of each sized array (instead of the formatting along with it)
+				System.out.println(work);							//printsw only the work of each sized array
+			}
+		}//pratt
+				
+	}//main
+	static void quickSort(int[] values, int first, int last)
+	{
+		/* This runs the quicksort method, similarly implemented
+		 * to the way it is explained in the lecture slides.
+		 * It grabs a pivot at the first value and seperates the
+		 * list such that the first half of the list is less than
+		 * the pivot value and the greater half is all more than 
+		 * the pivot value.
+		 */
+		if(first>=last)return;					//if the lower index ends up being greater than the higher index, it wont run quicksort. it will have finished that side of the sort
+		int i=first; int j=last+1; 				// start at the two ends
+		int X = values[first];    				// Get the pivot value
+		do {
+			i++;
+			while (i<values.length && values[i] < X)		// i moves right
+			{
+				i++;
+				quickComparisons++;
+			}
+			j--;
+			while (j<values.length && values[j] > X) 		// j moves left
+			{
+				j--;
+				quickComparisons++;
+			}
+		   if (i < j) 
+			   {
+		   		int n = values[i];				//this will save the current value in the smallest 
+		   		values[i]=values[j];			//stores the value in the preceding location where the larger value was
+		   		values[j]=n;					//retrieves the stored value and places it in the latter location 
+		   		quickSwaps++;
+		   		quickComparisons++;
+			   }
+		       else{quickComparisons++; break;}	// of j, swap, and keep going
+		} while (true);
+
+		int n = values[first];					//this will save the current value in the smallest 
+   		values[first]=values[j];				//stores the value in the preceding location where the larger value was
+   		values[j]=n;							//retrieves the stored value and places it in the latter location 
+		quickSwaps++;
+   		
+   		quickSort(values, first, j-1);
+		quickSort(values, j+1, last);
+	}
+}//class

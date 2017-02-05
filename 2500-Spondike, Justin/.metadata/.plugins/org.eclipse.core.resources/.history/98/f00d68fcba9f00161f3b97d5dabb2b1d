@@ -1,0 +1,27 @@
+
+public class UnsortedLL extends ListDefaults
+{
+/* This list will grab each new word that the program parses from the text file
+ * and throws it into an unsorted linked list. If ever there is a word that is
+ * already present on the list it will increment the counter of that word, 
+ * not compromising the 'order' of the list.
+ */
+	public UnsortedLL()
+	{
+		
+	}
+	public void add(String text)
+	{
+		WordNode node = new WordNode(text, list);	//creates a new node which holds the word (String text) and a link to the front of the list (WordNode list)
+		list=node;							//sets the front of the list to the new node
+	}
+	public String toString()
+	{
+		
+		for(int x=0; x<100;x++)
+		{
+			System.out.print(location.getValue()+" Count: x"+location.getCount());
+		}
+		return "";
+	}
+}

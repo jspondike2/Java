@@ -1,0 +1,60 @@
+
+public class SortedLL extends ListDefaults
+{
+/* This list will grab each new word that the program parses from the text file
+ * and throws it into a sorted linked list. When there is a word that is not
+ * present in the list it will find the proper placement of the word (alphabetically)
+ * If ever there is a word that is already present on the list it will increment the
+ * counter of that word, not compromising the order of the list.
+ */
+	public SortedLL()
+	{
+		// This default constructor creates a SortedLL object.
+	}
+	public void add(String text)
+	{
+		/* Depending on the case that is currently 
+		 * being considered, the add method
+		 * will add the new word onto the list.
+		 */
+		WordNode node = new WordNode(text, null);	//creates a new node for the new word
+		if(previous==null)							//if previous has not been assigned a reference node, there are no items on the list
+			{
+				node.setLink(list);					//the node's link is set to point at the list
+				list=node;							// and then the list points to that new node (placing it on the front of the list)
+				refChanCount+=2;					//adds two to the counter, once for the wordnode assignment and once for the list assignment
+			}
+		else 
+			{
+				node.setLink(location);				//if there is already a anode on the list then it will set the node's link
+				previous.setLink(node);				// to point at the location (where it is to be placed) and then set the previous node to point at the new node
+				refChanCount+=2;					//adds two to the counter, once for the wordnode assignment and once for the list assignment
+			}
+	}
+	public boolean contains(String word)
+	{
+		/* The alphabetical list is sorted such that once the location
+		 * pointer passes the point where the word is supposed to be
+		 * it no longer has to traverse the list. 
+		 */
+		if(list==null)return false;					//if the list is empty then the word cannot be in the list
+		location=list;								//sets the location to the front of the list
+		previous=null;
+		String locValue=location.getValue()+"";
+		while(location!=null)						//so long as the location is not pointing to nothing and we haven't passed where the word is supposed to be
+		{
+			locValue=location.getValue()+"";
+			
+			if(locValue.equals(word)){checks++; return true;}	//if the value in the current node is the same as the word then return true (adds 2 to the checks because of the two if statements)
+			else if(locValue.compareTo(word)<0)					//if the word comes after the current value in the list it will output a negative integer and this if will increment the position of the location pointer
+			{
+				checks+=2;
+				previous=location;
+				location=(WordNode)location.getLink();
+			}
+			else {checks+=2; break;}								//if we've passed the location where the word should be located ( where .compareTo() returns a positive integer) it will break
+		}
+		return false;								//if it wasn't found return false
+	}
+
+}

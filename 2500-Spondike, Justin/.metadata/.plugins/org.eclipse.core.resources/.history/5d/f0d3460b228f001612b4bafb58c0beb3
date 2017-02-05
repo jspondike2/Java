@@ -1,0 +1,22 @@
+
+public class PostFixException extends Exception
+{
+
+	/*
+	 * This exception will be thrown if the evaluater
+	 * method runs out of operands from the stack and
+	 * still has operators remaining in the string. 
+	 */
+	private static final long serialVersionUID = 1L; //The compiler warned that this wasn't serialized?? this was a compiler recommendation
+	
+	public PostFixException()
+	{
+		//Default error message will just display "PostFixException"
+		super();
+	}
+	public PostFixException(String x)
+	{
+		//Error message will be displayed along with "PostFixException"
+		super(x);
+	}
+}
